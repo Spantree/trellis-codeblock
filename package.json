@@ -1,0 +1,19 @@
+{
+  "name": "trellis-codeblock",
+  "description": "CodeBlock Vue component for Trellis Slidev decks",
+  "private": true,
+  "scripts": {
+    "dev": "slidev slides.md --open",
+    "build": "slidev build slides.md",
+    "export": "slidev export slides.md"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.51.0",
+    "@slidev/types": "^0.51.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0"
+  }
+}
