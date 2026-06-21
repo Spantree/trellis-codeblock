@@ -1,0 +1,277 @@
+{
+  "name": "Seti",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#151718",
+    "editor.foreground": "#CFD2D1",
+    "editor.lineHighlightBackground": "#1d1f20",
+    "editor.selectionBackground": "#253340",
+    "editorCursor.foreground": "#9FCA56",
+    "editorWhitespace.foreground": "#2a2f3a"
+  },
+  "tokenColors": [
+    {
+      "name": "Comment",
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#41535B",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "name": "String",
+      "scope": [
+        "string",
+        "string.quoted",
+        "string.template",
+        "string.interpolated",
+        "string.regexp"
+      ],
+      "settings": {
+        "foreground": "#55B5DB"
+      }
+    },
+    {
+      "name": "String escape / interpolation punctuation",
+      "scope": [
+        "constant.character.escape",
+        "punctuation.definition.string",
+        "punctuation.definition.template-expression"
+      ],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "Number",
+      "scope": ["constant.numeric", "constant.numeric.integer", "constant.numeric.float"],
+      "settings": {
+        "foreground": "#CD3F45"
+      }
+    },
+    {
+      "name": "Boolean / null / undefined",
+      "scope": [
+        "constant.language",
+        "constant.language.boolean",
+        "constant.language.null",
+        "constant.language.undefined"
+      ],
+      "settings": {
+        "foreground": "#CD3F45"
+      }
+    },
+    {
+      "name": "Keyword",
+      "scope": [
+        "keyword",
+        "keyword.control",
+        "keyword.operator.new",
+        "keyword.operator.delete",
+        "keyword.operator.typeof",
+        "keyword.operator.instanceof",
+        "keyword.operator.in",
+        "keyword.other",
+        "storage.modifier",
+        "storage.type.function",
+        "storage.type.class",
+        "storage.type.enum"
+      ],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "Storage type (var/let/const/def/fn)",
+      "scope": ["storage.type", "storage.type.js", "storage.type.ts"],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "Operator",
+      "scope": [
+        "keyword.operator",
+        "keyword.operator.arithmetic",
+        "keyword.operator.comparison",
+        "keyword.operator.logical",
+        "keyword.operator.assignment"
+      ],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "Function / method name",
+      "scope": [
+        "entity.name.function",
+        "entity.name.method",
+        "meta.function-call entity.name.function",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#55B5DB"
+      }
+    },
+    {
+      "name": "Class / type / interface name",
+      "scope": [
+        "entity.name.class",
+        "entity.name.type",
+        "entity.name.type.class",
+        "entity.name.type.interface",
+        "entity.other.inherited-class",
+        "support.class",
+        "support.type"
+      ],
+      "settings": {
+        "foreground": "#a074c4"
+      }
+    },
+    {
+      "name": "Type annotation",
+      "scope": [
+        "meta.type.annotation",
+        "meta.return.type",
+        "meta.type.parameters entity.name.type",
+        "entity.name.type.alias"
+      ],
+      "settings": {
+        "foreground": "#a074c4"
+      }
+    },
+    {
+      "name": "Variable / parameter",
+      "scope": [
+        "variable",
+        "variable.other",
+        "variable.other.readwrite",
+        "variable.parameter",
+        "variable.other.property"
+      ],
+      "settings": {
+        "foreground": "#CFD2D1"
+      }
+    },
+    {
+      "name": "Object property key",
+      "scope": [
+        "meta.object-literal.key",
+        "meta.object.member",
+        "support.type.property-name",
+        "string.quoted.property"
+      ],
+      "settings": {
+        "foreground": "#CFD2D1"
+      }
+    },
+    {
+      "name": "Decorator / annotation",
+      "scope": [
+        "meta.decorator",
+        "entity.name.function.decorator",
+        "punctuation.decorator"
+      ],
+      "settings": {
+        "foreground": "#E6CD69"
+      }
+    },
+    {
+      "name": "Import / include path",
+      "scope": ["string.quoted.include", "meta.import string"],
+      "settings": {
+        "foreground": "#55B5DB"
+      }
+    },
+    {
+      "name": "Punctuation",
+      "scope": [
+        "punctuation",
+        "punctuation.separator",
+        "punctuation.terminator",
+        "punctuation.definition.block",
+        "punctuation.definition.parameters",
+        "meta.brace"
+      ],
+      "settings": {
+        "foreground": "#CFD2D1"
+      }
+    },
+    {
+      "name": "Tag name (HTML / JSX)",
+      "scope": [
+        "entity.name.tag",
+        "meta.tag entity.name.tag",
+        "support.class.component"
+      ],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "Tag attribute",
+      "scope": ["entity.other.attribute-name", "meta.tag.attributes"],
+      "settings": {
+        "foreground": "#55B5DB"
+      }
+    },
+    {
+      "name": "YAML key",
+      "scope": ["entity.name.tag.yaml", "string.unquoted.plain.out.yaml"],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "YAML string value",
+      "scope": [
+        "string.unquoted.plain.in.yaml",
+        "string.quoted.double.yaml",
+        "string.quoted.single.yaml"
+      ],
+      "settings": {
+        "foreground": "#55B5DB"
+      }
+    },
+    {
+      "name": "Bash / shell built-in command",
+      "scope": [
+        "support.function.builtin.shell",
+        "entity.name.command",
+        "keyword.other.shell-script"
+      ],
+      "settings": {
+        "foreground": "#9FCA56"
+      }
+    },
+    {
+      "name": "Go package / type reference",
+      "scope": ["variable.other.go", "entity.name.import.go"],
+      "settings": {
+        "foreground": "#a074c4"
+      }
+    },
+    {
+      "name": "Python decorator",
+      "scope": ["entity.name.function.decorator.python", "support.token.decorator.python"],
+      "settings": {
+        "foreground": "#E6CD69"
+      }
+    },
+    {
+      "name": "Python built-in",
+      "scope": ["support.function.builtin.python", "support.type.python"],
+      "settings": {
+        "foreground": "#55B5DB"
+      }
+    },
+    {
+      "name": "Invalid / deprecated",
+      "scope": ["invalid", "invalid.deprecated"],
+      "settings": {
+        "foreground": "#CD3F45",
+        "fontStyle": "underline"
+      }
+    }
+  ]
+}
