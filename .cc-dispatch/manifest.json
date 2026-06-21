@@ -5,18 +5,29 @@
       "to": "channel:1517560745837989898",
       "accountId": "default",
       "session": "trellis-codeblock"
+    },
+    {
+      "channel": "discord",
+      "to": "channel:1518059140961009785",
+      "accountId": "default",
+      "session": "trellis-codeblock"
     }
   ],
   "wake": [
     {
       "sessionKey": "agent:main:discord:channel:1517560745837989898",
       "mode": "now",
-      "events": ["Notification", "PermissionRequest", "Elicitation", "StopFailure", "SessionEnd", "PostCompact"]
+      "events": [
+        "Notification",
+        "PermissionRequest",
+        "Elicitation",
+        "StopFailure",
+        "SessionEnd",
+        "PostCompact"
+      ]
+    },
+    {
+      "sessionKey": "agent:main:discord:channel:1518059140961009785"
     }
-  ],
-  "linear": {
-    "teamId": "0518b884-41e6-4308-ad80-3f3bef388de6",
-    "teamKey": "TRLS",
-    "projectId": "5ffa9b13-fbd2-4870-95e4-0c94cee704d9"
-  }
+  ]
 }

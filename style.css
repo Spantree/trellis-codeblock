@@ -1,0 +1,22 @@
+/* Auto-imported by Slidev. Layout for CodeBlock story slides. */
+
+.codeblock-slide {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* slidev-layout already supplies outer padding; keep this tight so the
+     window gets as much vertical room as possible (font scales to fill). */
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.codeblock-slide h2 {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+  flex: 0 0 auto;
+}
+
+.codeblock-slide .cb-wrapper {
+  flex: 1 1 0;
+  min-height: 0;
+}

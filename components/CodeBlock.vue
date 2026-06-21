@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { createHighlighter } from 'shiki'
 import type { Highlighter } from 'shiki'
 import setiTheme from '../themes/seti.json'
@@ -10,14 +10,12 @@ interface Props {
   theme?: string
   title?: string
   noChrome?: boolean
-  fontSize?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   language: 'typescript',
   theme: 'Seti',
   noChrome: false,
-  fontSize: 14,
 })
 
 const highlighted = ref<string>('')
@@ -45,12 +43,57 @@ async function render() {
   })
 }
 
-onMounted(render)
+// --- Auto font size ----------------------------------------------------------
+const containerRef = ref<HTMLElement | null>(null)
+const computedFontSize = ref(16)
+
+const CHAR_WIDTH_RATIO = 0.603 // Fira Code: char width ≈ 0.603 × fontSize
+const LINE_HEIGHT = 1.45
+const CODE_PAD_H = 48 // 24px top + 24px bottom on .codeblock-code
+const CODE_PAD_W = 64 // 32px left + 32px right
+const TITLEBAR_H = 28 // when chrome is visible
+
+function calcFontSize() {
+  const el = containerRef.value
+  if (!el || !props.code) return
+  const w = el.clientWidth
+  const h = el.clientHeight
+
+  const lines = props.code.split('\n')
+  const numLines = lines.length
+  const maxChars = Math.max(...lines.map((l) => l.length), 1)
+
+  const chromeH = props.noChrome ? 0 : TITLEBAR_H
+  const availW = w - CODE_PAD_W
+  const availH = h - chromeH - CODE_PAD_H
+
+  // Font that fits width vs font that fits height — take the smaller.
+  const byWidth = availW / (maxChars * CHAR_WIDTH_RATIO)
+  const byHeight = availH / (numLines * LINE_HEIGHT)
+  computedFontSize.value = Math.max(8, Math.floor(Math.min(byWidth, byHeight)))
+}
+
+let ro: ResizeObserver | null = null
+
+onMounted(async () => {
+  await render()
+  await nextTick()
+  calcFontSize()
+  ro = new ResizeObserver(calcFontSize)
+  if (containerRef.value) ro.observe(containerRef.value)
+})
+
+onUnmounted(() => ro?.disconnect())
+
 watch(() => [props.code, props.language, props.theme], render)
+watch(() => [props.code, props.language, props.noChrome], async () => {
+  await nextTick()
+  calcFontSize()
+})
 </script>
 
 <template>
-  <div class="codeblock-canvas">
+  <div ref="containerRef" class="codeblock-fill">
     <div class="codeblock-window">
       <div v-if="!noChrome" class="codeblock-titlebar">
         <div class="codeblock-dots">
@@ -62,7 +105,7 @@ watch(() => [props.code, props.language, props.theme], render)
       </div>
       <div
         class="codeblock-code"
-        :style="{ fontSize: fontSize + 'px' }"
+        :style="{ fontSize: computedFontSize + 'px' }"
         v-html="highlighted"
       />
     </div>
@@ -70,26 +113,31 @@ watch(() => [props.code, props.language, props.theme], render)
 </template>
 
 <style scoped>
-.codeblock-canvas {
-  /* Carbon's light gray/cream gradient canvas */
-  background: linear-gradient(135deg, #c0c5cc 0%, #b3bac2 100%);
-  padding: 56px;
-  border-radius: 4px;
-  display: inline-block;
-  max-width: 100%;
+.codeblock-fill {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .codeblock-window {
+  /* Fixed-size window: fills the container; font-size fills the interior,
+     any remainder is whitespace (Carbon "contained" feel). */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   border-radius: 10px;
   overflow: hidden;
   /* Pronounced Carbon-style drop shadow */
   box-shadow: 0 20px 68px rgba(0, 0, 0, 0.55);
   background: #151718;
-  min-width: 320px;
 }
 
 .codeblock-titlebar {
   position: relative;
+  flex: 0 0 28px;
   height: 28px;
   display: flex;
   align-items: center;
@@ -134,10 +182,11 @@ watch(() => [props.code, props.language, props.theme], render)
 }
 
 .codeblock-code {
+  flex: 1 1 0;
+  min-height: 0;
   background: #151718;
   padding: 24px 32px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 /* Reset Shiki's emitted <pre>/<code> to inherit our typography */
@@ -145,7 +194,8 @@ watch(() => [props.code, props.language, props.theme], render)
   margin: 0;
   padding: 0;
   background: transparent !important;
-  overflow-x: auto;
+  overflow: hidden;
+  white-space: pre;
 }
 
 .codeblock-code :deep(code) {
@@ -155,18 +205,5 @@ watch(() => [props.code, props.language, props.theme], render)
   display: block;
   white-space: pre;
   tab-size: 4;
-}
-
-/* Hide scrollbars while keeping scroll behavior */
-.codeblock-code::-webkit-scrollbar,
-.codeblock-code :deep(pre.shiki)::-webkit-scrollbar {
-  height: 6px;
-  background: transparent;
-}
-
-.codeblock-code::-webkit-scrollbar-thumb,
-.codeblock-code :deep(pre.shiki)::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 3px;
 }
 </style>

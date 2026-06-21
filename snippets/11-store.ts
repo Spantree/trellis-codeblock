@@ -22,17 +22,8 @@ export function toggle(id: number): void {
   if (todo) todo.done = !todo.done
 }
 
-export const visible = computed(() => {
-  switch (state.filter) {
-    case 'active':
-      return state.todos.filter((t) => !t.done)
-    case 'done':
-      return state.todos.filter((t) => t.done)
-    default:
-      return state.todos
-  }
-})
-
-export const remaining = computed(
-  () => state.todos.filter((t) => !t.done).length,
+export const visible = computed(() =>
+  state.filter === 'all'
+    ? state.todos
+    : state.todos.filter((t) => (state.filter === 'done') === t.done),
 )

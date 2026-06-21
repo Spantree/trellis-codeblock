@@ -1,92 +1,94 @@
-# Loop 001 — CodeBlock component report
+# Loop 002 — CodeBlock layout + auto-font report
 
-**Status:** ✅ Green gate met. Dev server live on port **3030**, all 12 story
-slides render error-free, canonical Python/Seti slide matches Carbon's Seti output.
+**Linear:** TRLS-43 · **Branch:** `main` · **Status:** ✅ Green gate met.
+
+Addressed all five pieces of Cedric's loop-001 feedback: light slide
+background, removed grey canvas, fixed-size window with auto-scaling font,
+no overflow on any slide, and equal-height two-column.
+
+## Green gate
+
+| Check | Result |
+|-------|--------|
+| `bun run slidev build slides.md` | exit **0** |
+| All 12 slides: white bg, no overflow, no canvas | ✅ (headless sweep, 0 errors) |
+| Font visibly auto-scales | ✅ 8px (dense) → 36px (5-line no-chrome) |
+| Two-column equal height | ✅ both panels 396px logical, padded to equal lines |
+
+Per-story sweep (headless Chromium, 1280×720, route = story + 1):
+
+```
+story  1  python/seti      11px   no-overflow  ok
+story  2  ts/seti          21px   no-overflow  ok
+story  3  go/seti           8px   no-overflow  ok
+story  4  yaml/seti        24px   no-overflow  ok
+story  5  bash/seti        26px   no-overflow  ok
+story  6  python/dracula   10px   no-overflow  ok
+story  7  ts/github-dark   11px   no-overflow  ok
+story  8  python (title)   20px   no-overflow  ok
+story  9  python noChrome  36px   no-overflow  ok
+story 10  python longlines  9px   no-overflow  ok
+story 11  ts longcode       8px   no-overflow  ok
+story 12  two-column    15/11px   no-overflow  ok
+```
+
+## What changed
+
+### Phase A — light slide background
+`slides.md` headmatter now sets `colorSchema: light` + `background: '#ffffff'`.
+The Seti dark window floats on a white slide; the window keeps its own
+`#151718` background.
+
+### Phase B — removed the canvas
+Stripped `.codeblock-canvas` (the `linear-gradient(135deg, #c0c5cc…)` wrapper,
+56px padding, and slide-level shadow) from `CodeBlock.vue`. The template root is
+now `.codeblock-fill` (a 100%×100% flex-center container). The dark window
+renders directly on the slide. `min-width: 320px` removed; window is
+`width: 100%`.
+
+### Phase C — auto font size
+Removed the fixed `fontSize` prop. A `ResizeObserver` on the fill container
+drives `calcFontSize()`, which takes the **smaller** of the width-constrained
+and height-constrained font (`CHAR_WIDTH_RATIO = 0.603`, `LINE_HEIGHT = 1.45`),
+floored at 8px. The window is now a **fixed-size rectangle** (`height: 100%`,
+flex column; `.codeblock-code` is `flex: 1`) so the dark surface fills the
+container and any unused space below the code is whitespace — the Carbon
+"contained" feel from the goal. Overflow on `.codeblock-code` and `pre.shiki`
+changed from `auto` to `hidden`.
+
+### Phase D — equal-height two-column
+Slide 12 pads the shorter snippet (`usage.ts`) with trailing newlines to match
+the taller one's line count before passing to `:code`. Both panels are
+identical height with aligned title bars.
+
+### Phase E — story slide layout
+Each story slide wraps its `CodeBlock` in
+`.codeblock-slide > h2 + .cb-wrapper` (flex column, `cb-wrapper` is `flex: 1`),
+giving the component a sized container to fill. The two-column slide uses a
+`grid-template-columns: 1fr 1fr` wrapper. Layout CSS lives in a root
+`style.css` (auto-imported by Slidev). Slide padding was tightened to 0 (the
+`slidev-layout` already pads) so dense snippets get more vertical room and
+clear the 8px floor without clipping.
+
+### Snippet tweak
+`snippets/11-store.ts` trimmed 38 → 27 lines. At 38 lines the slide's fixed
+552px logical canvas forced the font below the 8px floor and clipped the
+bottom; 27 lines fills the window vertically at the floor with no overflow.
 
 ## Dev server
 
-- **Local URL:** http://localhost:3030/
-- **Port:** 3030 (started with `--remote` so the tailnet host can reach it)
+- **Local:** http://localhost:3030/ (running, `--remote`)
 - **Log:** `/tmp/trellis-codeblock.log`
-- Started with:
+- Tailnet port `39738` already registered (loop-001). To expose, Cedric runs:
   ```bash
-  nohup bun run slidev slides.md --port 3030 --remote > /tmp/trellis-codeblock.log 2>&1 &
+  /Applications/Tailscale.app/Contents/MacOS/Tailscale serve --https=39738 http://localhost:3030
   ```
+  → https://cedrics-mac-mini-2.tailb5984b.ts.net:39738
 
-## ⚠️ ACTION REQUIRED — Cedric runs this
+## Screenshots
 
-The `openclaw` agent user cannot bind the Tailscale daemon. The tailnet port is
-already registered (via the tailscale skill); you just need to bind the serve:
+`./.cc-dispatch/loops/loop-002-layout-and-autofont/screenshots/`
 
-```bash
-/Applications/Tailscale.app/Contents/MacOS/Tailscale serve --https=39738 http://localhost:3030
-```
-
-Once bound, the deck is live at:
-
-- **Deck:** https://cedrics-mac-mini-2.tailb5984b.ts.net:39738
-- **Presenter:** https://cedrics-mac-mini-2.tailb5984b.ts.net:39738/presenter/1
-
-| Field | Value |
-|-------|-------|
-| Tailnet host | `cedrics-mac-mini-2.tailb5984b.ts.net` |
-| Tailnet port | `39738` |
-| Local port | `3030` |
-| Service name | `slides` |
-
-## Per-phase notes
-
-### Phase A — setup
-- `package.json` pinned `@slidev/cli@^0.51.0`, **which does not exist** — Slidev
-  dropped the leading `0.` from its version scheme. No stable `0.51.x` ships
-  (only `0.51.0-beta.x`). Installed the closest stable line, **`52.16.0`**
-  (≈ the old `0.52`), which ships **`shiki@4.2.0`** as required.
-- Added `@slidev/theme-default` + `@slidev/theme-seriph` — the default theme is
-  not bundled with the CLI in this version and the server refused to start
-  without it.
-- `vite.config.ts` (`allowedHosts: true`) left untouched for Tailscale.
-
-### Phase B — `CodeBlock.vue`
-- Props per spec: `code`, `language`, `theme` (default `Seti`), `title`,
-  `noChrome`, `fontSize`.
-- Seti loaded as the custom JSON theme object from `themes/seti.json`
-  (`theme: 'Seti'` matches its `name` field). `dracula` + `github-dark` come
-  from Shiki's bundled set. **Never** used `theme: 'seti'` as a string.
-- One shared highlighter promise across all instances (Shiki is expensive to
-  init); `v-html` renders Shiki's `<pre class="shiki">`, restyled to use
-  Fira Code at the requested size.
-- Chrome is pure CSS: gradient canvas, 10px window radius,
-  `0 20px 68px rgba(0,0,0,.55)` shadow, 28px titlebar, 12px traffic lights
-  (#FF5F57 / #FEBC2E / #28C840), centered translucent title.
-
-### Phase C — story slides
-- 12 stories in `slides.md`, all using real, meaningful code.
-- **Key fix:** multi-line backtick template literals inside Vue attributes
-  (`:code="\`...\`"`) break the Vue template compiler ("Unterminated string
-  constant") and markdown mangles the backticks. Solution: each snippet lives in
-  `snippets/` and is imported with Vite's **`?raw`** — the file content *is* the
-  displayed code, with zero escaping.
-- Slidev scopes a markdown `<script setup>` block to **its own slide only**, not
-  globally, so each slide carries its own import block.
-
-### Phase D — Tailscale
-- Port registered with the tailscale skill (`ensure --service slides
-  --local-port 3030`) → tailnet port `39738`. Bind command above is Cedric's to
-  run (daemon access).
-
-## Verification (headless Chromium, 1920×1080)
-
-- All 12 stories: `<pre class="shiki">` present, **0 console/page errors**.
-- Canonical Python/Seti token colors sampled from the live DOM:
-  - keywords (`def`/`class`/`async`/`import`/`return`) → `#e6cd69` (yellow) ✓
-  - strings → `#55b5db` (blue) ✓
-  - operators (`=`, `*`) / params (`self`, `prompt`) → `#9fca56` (green) ✓
-  - class/type names (`Agent`) → `#a074c4` (purple) ✓
-  - numbers / `None` → `#cd3f45` (red) ✓
-  - foreground / punctuation → `#CFD2D1` ✓
-- Fira Code confirmed (the `->` ligature renders as `→` in the screenshot).
-
-## Commits
-
-1. `chore: install Slidev 52.16.0 (Shiki v4.2.0)`
-2. `feat: add CodeBlock.vue with Seti theme + 12 story slides`
+- `slide-1.png` — Python / Seti / medium (11px, fills window, white bg)
+- `slide-7.png` — TypeScript / GitHub Dark / medium (11px)
+- `slide-12.png` — two-column, equal height, padded line counts
