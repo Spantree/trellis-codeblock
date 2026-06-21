@@ -6,7 +6,7 @@
     "editor.foreground": "#CFD2D1",
     "editor.lineHighlightBackground": "#1d1f20",
     "editor.selectionBackground": "#253340",
-    "editorCursor.foreground": "#9FCA56",
+    "editorCursor.foreground": "#9fca56",
     "editorWhitespace.foreground": "#2a2f3a"
   },
   "tokenColors": [
@@ -14,7 +14,7 @@
       "name": "Comment",
       "scope": ["comment", "punctuation.definition.comment"],
       "settings": {
-        "foreground": "#41535B",
+        "foreground": "#41535b",
         "fontStyle": "italic"
       }
     },
@@ -25,67 +25,58 @@
         "string.quoted",
         "string.template",
         "string.interpolated",
-        "string.regexp"
+        "string.regexp",
+        "meta.import string",
+        "string.quoted.include"
       ],
       "settings": {
-        "foreground": "#55B5DB"
+        "foreground": "#55b5db"
       }
     },
     {
-      "name": "String escape / interpolation punctuation",
-      "scope": [
-        "constant.character.escape",
-        "punctuation.definition.string",
-        "punctuation.definition.template-expression"
-      ],
+      "name": "String escape",
+      "scope": ["constant.character.escape"],
       "settings": {
-        "foreground": "#9FCA56"
+        "foreground": "#9fca56"
       }
     },
     {
-      "name": "Number",
-      "scope": ["constant.numeric", "constant.numeric.integer", "constant.numeric.float"],
-      "settings": {
-        "foreground": "#CD3F45"
-      }
-    },
-    {
-      "name": "Boolean / null / undefined",
+      "name": "Number / boolean / null — constant",
       "scope": [
+        "constant.numeric",
         "constant.language",
         "constant.language.boolean",
         "constant.language.null",
-        "constant.language.undefined"
+        "constant.language.undefined",
+        "constant.language.none"
       ],
       "settings": {
-        "foreground": "#CD3F45"
+        "foreground": "#cd3f45"
       }
     },
     {
-      "name": "Keyword",
+      "name": "Keyword — control flow, import, class, def, function, let, const, var",
       "scope": [
         "keyword",
         "keyword.control",
-        "keyword.operator.new",
-        "keyword.operator.delete",
-        "keyword.operator.typeof",
-        "keyword.operator.instanceof",
-        "keyword.operator.in",
+        "keyword.control.import",
+        "keyword.control.from",
+        "keyword.control.export",
         "keyword.other",
-        "storage.modifier",
+        "keyword.declaration",
+        "storage.type",
+        "storage.type.js",
+        "storage.type.ts",
         "storage.type.function",
         "storage.type.class",
-        "storage.type.enum"
+        "storage.type.enum",
+        "storage.modifier",
+        "variable.language.this",
+        "variable.language.super",
+        "variable.language.self"
       ],
       "settings": {
-        "foreground": "#9FCA56"
-      }
-    },
-    {
-      "name": "Storage type (var/let/const/def/fn)",
-      "scope": ["storage.type", "storage.type.js", "storage.type.ts"],
-      "settings": {
-        "foreground": "#9FCA56"
+        "foreground": "#e6cd69"
       }
     },
     {
@@ -95,74 +86,102 @@
         "keyword.operator.arithmetic",
         "keyword.operator.comparison",
         "keyword.operator.logical",
-        "keyword.operator.assignment"
+        "keyword.operator.assignment",
+        "keyword.operator.new",
+        "keyword.operator.delete",
+        "keyword.operator.typeof",
+        "keyword.operator.instanceof",
+        "keyword.operator.in",
+        "keyword.operator.spread",
+        "keyword.operator.rest"
       ],
       "settings": {
-        "foreground": "#9FCA56"
+        "foreground": "#9fca56"
       }
     },
     {
-      "name": "Function / method name",
+      "name": "Attribute / parameter / variable3",
+      "scope": [
+        "variable.parameter",
+        "entity.other.attribute-name",
+        "meta.attribute"
+      ],
+      "settings": {
+        "foreground": "#9fca56"
+      }
+    },
+    {
+      "name": "Definition — function / method name, entity name",
       "scope": [
         "entity.name.function",
         "entity.name.method",
         "meta.function-call entity.name.function",
-        "support.function"
+        "support.function",
+        "support.function.builtin",
+        "entity.name.section"
       ],
       "settings": {
-        "foreground": "#55B5DB"
+        "foreground": "#55b5db"
       }
     },
     {
-      "name": "Class / type / interface name",
+      "name": "Meta — import path, module reference",
       "scope": [
-        "entity.name.class",
-        "entity.name.type",
-        "entity.name.type.class",
-        "entity.name.type.interface",
-        "entity.other.inherited-class",
-        "support.class",
-        "support.type"
+        "meta.import",
+        "meta.import-export",
+        "entity.name.module",
+        "entity.name.namespace"
       ],
       "settings": {
-        "foreground": "#a074c4"
+        "foreground": "#55b5db"
       }
     },
     {
-      "name": "Type annotation",
+      "name": "Tag",
       "scope": [
-        "meta.type.annotation",
-        "meta.return.type",
-        "meta.type.parameters entity.name.type",
-        "entity.name.type.alias"
+        "entity.name.tag",
+        "meta.tag entity.name.tag",
+        "support.class.component"
       ],
       "settings": {
-        "foreground": "#a074c4"
+        "foreground": "#55b5db"
       }
     },
     {
-      "name": "Variable / parameter",
+      "name": "Variable — general identifier",
       "scope": [
         "variable",
         "variable.other",
         "variable.other.readwrite",
-        "variable.parameter",
-        "variable.other.property"
+        "variable.other.constant",
+        "variable.other.local"
       ],
       "settings": {
-        "foreground": "#CFD2D1"
+        "foreground": "#55b5db"
       }
     },
     {
-      "name": "Object property key",
+      "name": "Property / variable2 — object member, type annotation",
       "scope": [
+        "variable.other.property",
+        "variable.other.object.property",
         "meta.object-literal.key",
         "meta.object.member",
         "support.type.property-name",
-        "string.quoted.property"
+        "entity.name.class",
+        "entity.name.type",
+        "entity.name.type.class",
+        "entity.name.type.interface",
+        "entity.name.type.alias",
+        "entity.name.type.enum",
+        "entity.other.inherited-class",
+        "support.class",
+        "support.type",
+        "meta.type.annotation entity.name.type",
+        "meta.return.type entity.name.type"
       ],
       "settings": {
-        "foreground": "#CFD2D1"
+        "foreground": "#a074c4"
       }
     },
     {
@@ -170,17 +189,11 @@
       "scope": [
         "meta.decorator",
         "entity.name.function.decorator",
+        "support.token.decorator",
         "punctuation.decorator"
       ],
       "settings": {
-        "foreground": "#E6CD69"
-      }
-    },
-    {
-      "name": "Import / include path",
-      "scope": ["string.quoted.include", "meta.import string"],
-      "settings": {
-        "foreground": "#55B5DB"
+        "foreground": "#e6cd69"
       }
     },
     {
@@ -191,35 +204,30 @@
         "punctuation.terminator",
         "punctuation.definition.block",
         "punctuation.definition.parameters",
-        "meta.brace"
+        "punctuation.definition.string",
+        "meta.brace",
+        "meta.brackets"
       ],
       "settings": {
         "foreground": "#CFD2D1"
       }
     },
     {
-      "name": "Tag name (HTML / JSX)",
-      "scope": [
-        "entity.name.tag",
-        "meta.tag entity.name.tag",
-        "support.class.component"
-      ],
-      "settings": {
-        "foreground": "#9FCA56"
-      }
-    },
-    {
       "name": "Tag attribute",
-      "scope": ["entity.other.attribute-name", "meta.tag.attributes"],
+      "scope": ["entity.other.attribute-name.html", "entity.other.attribute-name.jsx"],
       "settings": {
-        "foreground": "#55B5DB"
+        "foreground": "#9fca56"
       }
     },
     {
       "name": "YAML key",
-      "scope": ["entity.name.tag.yaml", "string.unquoted.plain.out.yaml"],
+      "scope": [
+        "entity.name.tag.yaml",
+        "string.unquoted.plain.out.yaml",
+        "punctuation.definition.key.yaml"
+      ],
       "settings": {
-        "foreground": "#9FCA56"
+        "foreground": "#9fca56"
       }
     },
     {
@@ -230,46 +238,43 @@
         "string.quoted.single.yaml"
       ],
       "settings": {
-        "foreground": "#55B5DB"
+        "foreground": "#55b5db"
       }
     },
     {
-      "name": "Bash / shell built-in command",
+      "name": "YAML anchor / alias",
+      "scope": ["entity.name.type.anchor.yaml", "variable.other.alias.yaml"],
+      "settings": {
+        "foreground": "#cd3f45"
+      }
+    },
+    {
+      "name": "Bash built-in / command",
       "scope": [
         "support.function.builtin.shell",
         "entity.name.command",
         "keyword.other.shell-script"
       ],
       "settings": {
-        "foreground": "#9FCA56"
+        "foreground": "#9fca56"
       }
     },
     {
-      "name": "Go package / type reference",
-      "scope": ["variable.other.go", "entity.name.import.go"],
+      "name": "Python built-in / self",
+      "scope": [
+        "support.function.builtin.python",
+        "support.type.python",
+        "variable.language.special.self.python"
+      ],
       "settings": {
-        "foreground": "#a074c4"
-      }
-    },
-    {
-      "name": "Python decorator",
-      "scope": ["entity.name.function.decorator.python", "support.token.decorator.python"],
-      "settings": {
-        "foreground": "#E6CD69"
-      }
-    },
-    {
-      "name": "Python built-in",
-      "scope": ["support.function.builtin.python", "support.type.python"],
-      "settings": {
-        "foreground": "#55B5DB"
+        "foreground": "#55b5db"
       }
     },
     {
       "name": "Invalid / deprecated",
       "scope": ["invalid", "invalid.deprecated"],
       "settings": {
-        "foreground": "#CD3F45",
+        "foreground": "#cd3f45",
         "fontStyle": "underline"
       }
     }
